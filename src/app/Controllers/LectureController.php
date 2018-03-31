@@ -60,7 +60,7 @@ class LectureController
                 $tempArray[] = $timeResult;
             }
         }
-
+        
         return $this->view->render($response, 'timetable.phtml', ['timeArray' => $timeArray]);
     }
 
