@@ -22,11 +22,13 @@ $container['logger'] = function ($c) {
 
 // Service factory for the ORM
 $container['db'] = function ($container) {
-    $capsule = new \Illuminate\Database\Capsule\Manager;
-    $capsule->addConnection($container['settings']['database']);
+    $dbCon = $container['settings']['database'];
 
-    $capsule->setAsGlobal();
-    $capsule->bootEloquent();
+    $dsn = $dbCon['DB_CONNECTION'].':host='.$dbCon['DB_HOST'].';dbname='.$dbCon['DB_NAME'].';charset='.$dbCon['charset'];
+    $usr = $dbCon['username'];
+    $pwd = $dbCon['password'];
 
-    return $capsule;
+    $pdo = new Database($dsn, $usr, $pwd);
+
+    return $pdo;
 };
