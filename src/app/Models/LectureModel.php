@@ -11,6 +11,19 @@ class LectureModel
     {
         $this->db = $container['db'];
     }
+    
+    public function univList(){
+
+        $query = $this->db->select()->from('university');
+
+        $stmt = $query->execute();
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $result[] = $row;
+        }
+
+        return $result;
+    }
 
     public function lectureList(){
 

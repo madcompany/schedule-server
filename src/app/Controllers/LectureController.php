@@ -16,6 +16,13 @@ class LectureController
         $this->lecture = $container->get('lecture');
         $this->view = $container->get('renderer');
     }
+    
+    public function university(Request $request,Response $response){
+        //강의 리스트
+        $result  = $this->lecture->univList();
+
+        return $response->withJson(['status' => true, 'univList' => $result , 'test' => $request->getHeaderLine('HTTP_ACCESS_CONTROL_ALLOW_HEADERS')] , 200);
+    }
 
     /**
      * 강의리스트
@@ -56,11 +63,12 @@ class LectureController
 
                 if (!in_array($timeResult, $timeArray)) { //중복제거
                     $timeArray[] = $timeResult;
-                }
-                $tempArray[] = $timeResult;
+                }                
             }
         }
-        
+        echo "<pre>";
+        print_r($timeArray);
+        echo "</pre>";
         return $this->view->render($response, 'timetable.phtml', ['timeArray' => $timeArray]);
     }
 

@@ -5,8 +5,12 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 
 // Routes
+$app->options('/{routes:.+}', function ($request, $response, $args) {
+    return $response;
+});
 
 $app->group('/api', function(){
+    $this->get('/universitys', LectureController::class . ':university')->setName('lecture.university');
     $this->get('/lectures', LectureController::class . ':lecture')->setName('lecture.lecture');
 
     $this->get('/timetable', LectureController::class . ':timetable')->setName('lecture.timetable');
