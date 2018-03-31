@@ -22,13 +22,18 @@ $container['logger'] = function ($c) {
 
 // Service factory for the ORM
 $container['db'] = function ($container) {
-    $dbCon = $container['settings']['database'];
+    $dbCon = $container->get('settings')['database'];
 
-    $dsn = $dbCon['DB_CONNECTION'].':host='.$dbCon['DB_HOST'].';dbname='.$dbCon['DB_NAME'].';charset='.$dbCon['charset'];
+    $dsn = $dbCon['driver'].':host='.$dbCon['host'].';dbname='.$dbCon['database'].';charset='.$dbCon['charset'];
     $usr = $dbCon['username'];
     $pwd = $dbCon['password'];
 
-    $pdo = new Database($dsn, $usr, $pwd);
+    $pdo = new Slim\PDO\Database($dsn, $usr, $pwd);
 
     return $pdo;
+};
+
+//  Model
+$container['lecture'] = function ($container) {
+    return new \app\Models\LectureModel($container);
 };
