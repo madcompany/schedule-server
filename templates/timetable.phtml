@@ -1,0 +1,16 @@
+<br/>
+//중복제거
+<?foreach($timeArray as $row):?>
+    <table border="1">
+        <?php for($i = 1; $i <= 8; $i++):?>
+        <tr>
+            <?php for($j = 1 ; $j <= 5 ; $j++):?>
+                <td>
+                    <?=$row[$j][$i]['subject_name']?>
+                </td>
+            <?php endfor; ?>
+        </tr>
+        <?php endfor;?>
+    </table>
+    <br/><br/><br/><br/><br/><br/>
+<?endforeach;?>

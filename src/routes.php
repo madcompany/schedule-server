@@ -7,7 +7,9 @@ use Slim\Http\Response;
 // Routes
 
 $app->group('/api', function(){
-    $this->get('/lectures', LectureController::class . ':index')->setName('lecture.index');
+    $this->get('/lectures', LectureController::class . ':lecture')->setName('lecture.lecture');
+
+    $this->get('/timetable', LectureController::class . ':timetable')->setName('lecture.timetable');
 });
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
