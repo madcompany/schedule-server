@@ -62,7 +62,7 @@ class LectureController
         $timeArray = []; //초기화
 
         for($i = 0 ; $i < count($lectureOrder); $i++){
-            $timeResult = $this->makeTimetable($lectureOrder[$i], $timetableList);
+            $timeResult = $this->makeTimetable($lectureOrder[$i], $timetableList, $limitWeek, $limitPeriod);
             if($timeResult !== false) {
 
                 if (!in_array($timeResult, $timeArray)) { //중복제거
@@ -78,12 +78,14 @@ class LectureController
     }
 
     /**
-     * 시간표생성
-     * @param $lectureOrder
-     * @param $timetableList
-     * @return array|bool
+     * 시간표 생성
+     * @param  $lectureOrder
+     * @param type $timetableList
+     * @param type $limitWeek
+     * @param type $limitPeriod
+     * @return mixed
      */
-    public function makeTimetable($lectureOrder, $timetableList){
+    public function makeTimetable($lectureOrder, $timetableList, $limitWeek, $limitPeriod){
 
         //시간표 정보
         $timeArray = [];
@@ -100,8 +102,13 @@ class LectureController
             foreach($timetableInfo as $info){
 
                 $week = $info['week']; //주정보
+                
+                //요일 제한사항 
+                if(in_array($week, $limitWeek)) continue;
                 //시작교시, 종료교시
-                list($startPeroid, $endPeriod) = explode(",", $info['period']); //교시정보
+                list($startPeroid, $endPeriod) = explode(",", $info['period']); //교시정보                
+                //시간제한사항
+                if(in_array($startPeroid, $limitPeriod) || in_array($endPeriod, $limitPeriod)) continue;
 
                 if( empty($timeArray[$week][$startPeroid]) && empty($timeArray[$week][$endPeriod]) ){ //선점되지 않았다면
                     $timeArray[$week][$startPeroid] = $info;
