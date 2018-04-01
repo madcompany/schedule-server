@@ -11,9 +11,9 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 
 $app->group('/api', function(){
     $this->get('/universitys', LectureController::class . ':university')->setName('lecture.university');
-    $this->get('/lectures', LectureController::class . ':lecture')->setName('lecture.lecture');
+    $this->get('/subjects', LectureController::class . ':subject')->setName('lecture.subject');
 
-    $this->get('/timetable', LectureController::class . ':timetable')->setName('lecture.timetable');
+    $this->get('/timetables', LectureController::class . ':timetable')->setName('lecture.timetable');
 });
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {

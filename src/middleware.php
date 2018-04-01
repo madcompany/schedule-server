@@ -6,9 +6,8 @@ use Slim\Http\Response;
 // e.g: $app->add(new \Slim\Csrf\Guard);
 // CORS Preflight middleware
 $app->add(function (Request $request, Response $response, $next) {
-    if($request->getMethod() !== 'OPTIONS') {
-        return $next($request, $response);
-    }
+    
+    $response = $next($request, $response);
 
     $response = $response->withHeader('Access-Control-Allow-Origin', '*');
     $response = $response->withHeader('Access-Control-Allow-Methods', $request->getHeaderLine('Access-Control-Request-Method'));

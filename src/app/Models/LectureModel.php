@@ -25,10 +25,10 @@ class LectureModel
         return $result;
     }
 
-    public function lectureList(){
+    public function subjectList($univ_idx = 1){        
 
-        $query = $this->db->select()->from('subject');
-
+        $query = $this->db->select()->from('subject')->where('univ_idx','=', $univ_idx);        
+        
         $stmt = $query->execute();
 
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -45,7 +45,9 @@ class LectureModel
         $query->join('subject AS S', 'SD.subject_idx', '=', 'S.subject_idx');
 
         $stmt = $query->execute();
-
+        
+        $result = [];
+        
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $result[$row['subject_idx']][] = $row;
         }

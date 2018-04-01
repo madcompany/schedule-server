@@ -13,11 +13,13 @@ class LectureController
     protected $view;
 
     public function __construct(ContainerInterface $container){ //ContainerInterface $container
+        ini_set('memory_limit',-1);
+        
         $this->lecture = $container->get('lecture');
         $this->view = $container->get('renderer');
     }
     
-    public function university(Request $request,Response $response){
+    public function university(Request $request,Response $response){        
         //강의 리스트
         $result  = $this->lecture->univList();
 
@@ -30,12 +32,12 @@ class LectureController
      * @param Response $response
      * @return static
      */
-    public function lecture(Request $request, Response $response){
-
+    public function subject(Request $request, Response $response){
+        $univ_idx = $request->getParam('univ_idx');
         //강의 리스트
-        $result  = $this->lecture->lectureList();
+        $result  = $this->lecture->subjectList($univ_idx);
 
-        return $response->withJson(['status' => true, 'lectureList'=>$result ] , 200);
+        return $response->withJson(['status' => true, 'subjectList'=>$result ] , 200);
     }
 
     /**
@@ -45,15 +47,17 @@ class LectureController
      * @return mixed
      */
     public function timeTable(Request $request, Response $response){
-        //$lecture = $request->getParam('lecture');
+        $subject_idx = explode(',', $request->getParam('subject_idx'));
+        $limitWeek = explode(',', $request->getParam('week'));
+        $limitPeriod = explode(',', $request->getParam('period'));
 
-        $lecture = [1,2,3,4]; //임시 데이터
+        //$subject_idx = [1,2,3,4,5,7,8,9]; //임시 데이터
 
         //강의 시간 리스트
-        $timetableList = $this->lecture->timetableList($lecture);
+        $timetableList = $this->lecture->timetableList($subject_idx);
 
         //순열을 사용하여 모든 경우의 수를 생성한다.
-        $lectureOrder = $this->pc_permute($lecture);
+        $lectureOrder = $this->pc_permute($subject_idx);
         //시간표 생성
         $timeArray = []; //초기화
 
@@ -66,10 +70,11 @@ class LectureController
                 }                
             }
         }
-        echo "<pre>";
-        print_r($timeArray);
-        echo "</pre>";
-        return $this->view->render($response, 'timetable.phtml', ['timeArray' => $timeArray]);
+        if(count($timeArray) > 0){        
+            return $response->withJson(['status' => true, 'timetableList'=>$timeArray ] , 200);        
+        }else{
+            return $response->withJson(['status' => false, 'msg'=>'선택가능한 시간표가 존재하지 않습니다.'] , 400);        
+        }
     }
 
     /**
